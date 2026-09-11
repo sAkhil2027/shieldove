@@ -1,0 +1,3 @@
+FROM python:3.11-slim\n\n# Set working directory\nWORKDIR /app\n\n# Install system dependencies (if any)\nRUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*\n\n# Copy project files\nCOPY . /app\n\n# Install Python dependencies\nRUN pip install --no-cache-dir -r requirements.txt\n\n# Environment variables with sensible defaults\nENV EMBEDDING_MODEL_NAME=all-MiniLM-L6-v2\nENV ADMIN_RELOAD_TOKEN=change_me\nENV ENABLE_ADMIN_ENDPOINT=false\nENV UVIORN_WORKERS=1\n\n# Expose the API port\nEXPOSE 8000\n\n# Use the custom entrypoint script to start the server\nCOPY entrypoint.sh /entrypoint.sh\nRUN chmod +x /entrypoint.sh\n\nENTRYPOINT ["/entrypoint.sh"]
